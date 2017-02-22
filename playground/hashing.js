@@ -1,13 +1,26 @@
 const {SHA256}= require('crypto-js');
 const jwt=require("jsonwebtoken");
-var date={
-  id:10
-};
-var token=jwt.sign(data, "123abc");
-console.log(token);
+const bcrypt=require("bcryptjs");
 
-var decoded=jwt.verify(token, "123abc");
-console.log("decoded", decoded);
+var password="123abc!";
+
+// bcrypt.genSalt(10, (err, salt)=>{
+//   bcrypt.hash(password, salt, (err, hash)=>{
+//     console.log(hash);
+//   });
+// });
+hashedpass="$2a$10$KGmgfBzhdM7nQTwf.ewUj.Mpi8SxcV/57HyPRVEX8Ym6dCZu.k9Mi";
+bcrypt.compare(password, hashedpass, (err, res)=>{
+  console.log(res);
+});
+// var date={
+//   id:10
+// };
+// var token=jwt.sign(data, "123abc");
+// console.log(token);
+//
+// var decoded=jwt.verify(token, "123abc");
+// console.log("decoded", decoded);
 
 // var message="I am user number 2";
 // hash=SHA256(message).toString();
