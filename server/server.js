@@ -16,7 +16,9 @@ const {
    Todo
 } = require('./models/todo')
 
-var {authenticate}=require("./middleware/authenticate")
+var {
+   authenticate
+} = require("./middleware/authenticate")
 
 const port = process.env.PORT || 3000;
 
@@ -58,6 +60,38 @@ app.get('/users/me', authenticate, (req, res) => {
    res.send(req.user);
 });
 
+app.post('/users/login', (req, res) => {
+   var body = _.pick(req.body, ["email", "password"]);
+   User.findByCredintials(body.email, body.password).then((user) => {
+      user.generateAuthToken().then((token)=>{
+res.header('x-auth', token).send(user);
+      });
+   }).catch((e) => {
+res.status(400).send();
+   });
+   //  email = req.params.email;
+   //  password = req.params.password;
+   //  res.send(body);
+   //  bcrypt.genSalt(10, (err, salt) => {
+   //     bcrypt.hash(password, salt, (err, hash) => {
+   //        hashedpass = hash;
+   //        User.findOne({
+   //           email
+   //        }).then((user) => {
+   //           if (!user) {
+   //              res.status(400).send("email is wrong");
+   //           }
+   //           if (user.password === hashedpass) {
+   //              res.status(200).send("login");
+   //           } else{
+   //              res.status(400).send("pass is wrong");
+   //           }
+   //        }).catch((e)=>res.status(404).send(e))
+   //
+   //
+   //     });
+   //  });
+});
 app.get('/todos', (req, res) => {
    Todo.find().then((todos) => {
       res.send({
