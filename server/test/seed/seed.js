@@ -20,7 +20,7 @@ const users = [{
       token: jwt.sign({
          _id: userOneId,
          access: "auth"
-      }, 'abc123').toString()
+      }, process.env.JWT_SECRET).toString()
 }]
 }, {
    _id: userTwoId,
@@ -31,7 +31,7 @@ const users = [{
       token: jwt.sign({
          _id: userTwoId,
          access: "auth"
-      }, 'abc123').toString()
+      }, process.env.JWT_SECRET).toString()
 }]
 }];
 
@@ -55,19 +55,20 @@ const todos = [{
 const populateTodos = (done) => {
    Todo.remove({}).then(() => {
       return Todo.insertMany(todos);
-   }).then(() => done());
+   }).then(() => done(), (e)=>done(e));
+};
+
+const populateUsers = (done) => {
+   User.remove({}).then(() => {
+      var userOne = new User(users[0]).save();
+      var userTwo = new User(users[1]).save();
+
+      return Promise.all([userOne, userTwo])
+   }).then(() => done(), (e)=>done(e));
 };
 module.exports = {
    todos,
-   populateTodos
+   populateTodos,
+   users,
+   populateUsers
 }
-
-const populateUsers=(done)=>{
-  User.remove({}).then(()=>{
-    var userOne = new User(users[0]).save();
-    var userTwo = new User(users[1]).save();
-
-    return Promise.all([userOne, userTwo])
-  }).then(()=> done());
-};
-module.exports={todos, populateTodos, users, populateUsers}
