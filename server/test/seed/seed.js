@@ -25,20 +25,32 @@ const users = [{
 }, {
    _id: userTwoId,
    email: 'natasha@example.com',
-   password: 'user2pass'
+   password: 'user2pass',
+   tokens: [{
+      access: 'auth',
+      token: jwt.sign({
+         _id: userTwoId,
+         access: "auth"
+      }, 'abc123').toString()
+}]
 }];
 
 const todos = [{
    _id: new ObjectID(),
-   text: "1st todo"
+   text: "1st todo",
+   _creator: userOneId
 }, {
    _id: new ObjectID(),
    text: "2nd todo",
    completed: true,
-   completedAt: 123
+   completedAt: 123,
+   _creator: userTwoId
+
 }, {
    _id: new ObjectID(),
-   text: "3d todo"
+   text: "3d todo",
+   _creator: userTwoId
+
 }];
 const populateTodos = (done) => {
    Todo.remove({}).then(() => {
